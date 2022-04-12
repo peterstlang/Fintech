@@ -45,7 +45,7 @@ def gimme_soup_w_start_end(url, start='01-01-2018', end='01-01-2020'):
     driver.implicitly_wait(10)
     driver.get(url)
     driver.find_element_by_xpath('//*[@value="agree"]').click()
-    time.sleep(5)
+    time.sleep(1)
     
     time.sleep(1)
     drp = driver.find_element_by_xpath('//div[@class="Pos(r) D(ib) C($linkColor) Cur(p)"]/*[name()="svg"][@data-icon="CoreArrowDown"]')
@@ -140,12 +140,12 @@ def dicts_to_df(list_of_dicts):
 
     
 
-
-#if __name__ == "__main__":
-#    url = get_stock('AAPL')
-#    soup, driver = gimme_soup(url)   
-#    rows = soup_to_scrape(soup)
-#    scraped = scrape_it(rows)
+if __name__ == "__main__":
+    url = get_stock('AAPL')
+    soup = gimme_soup_w_start_end(url)   
+    rows = soup_to_scrape(soup)
+    scraped = scrape_it(rows)
+    df = dicts_to_df(scraped)
 #    
 #    time.sleep(1)
 #    drp = driver.find_element_by_xpath('//div[@class="Pos(r) D(ib) C($linkColor) Cur(p)"]/*[name()="svg"][@data-icon="CoreArrowDown"]')
