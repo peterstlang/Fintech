@@ -32,11 +32,22 @@ import yhf_scraper as yhf
 # plot closing price
 # reversing
 
-# aapl_df = aapl_df[::-1]
+# df = df[::-1]
 
 
 # aapl_df.plot(x="Date", y="Close", figsize=(10, 6))
 # plt.xticks(rotation=45, ha="right")
+
+
+def plotte_prep(df=None):
+    cols = list(df.columns)
+    cols = cols[1:7]
+
+    df = df[::-1]
+
+    for i in cols:
+        df[i] = pd.to_numeric(df[i])
+    return df
 
 
 def execute_scrape(ticker="AAPL"):
@@ -50,15 +61,12 @@ def execute_scrape(ticker="AAPL"):
 
 # plot SMA
 def plot_SMA(df=None, time_period=10):
-    df = df[::-1]
     SMA = str("SMA" + "_" + str(time_period))
-    var = df["Close"].rolling(int(time_period)).mean()
-    # df.plot(x="Date", y=["Close", SMA], figsize=(8, 8))
-    # plt.xticks(rotation=45, ha="right")
-    # plt.show()
-    df[SMA] = var
-    print(df)
-    print(var)
+    df[SMA] = df.Close.rolling(int(time_period)).mean()
+    df.plot(x="Date", y=["Close", SMA], figsize=(8, 8))
+    plt.xticks(rotation=45, ha="right")
+
+    plt.show()
 
 
 # time_list = [5,10,25,50]
@@ -67,5 +75,8 @@ def plot_SMA(df=None, time_period=10):
 
 if __name__ == "__main__":
     df = execute_scrape()
+
+    preppa_df = plotte_prep(df=df)
+
     # print(df)
-    plot_SMA(df=df, time_period=5)
+    plot_SMA(df=preppa_df, time_period=5)
