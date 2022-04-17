@@ -56,8 +56,9 @@ def plot_SMA(df=None, time_period=10):
     # df.plot(x="Date", y=["Close", SMA], figsize=(8, 8))
     # plt.xticks(rotation=45, ha="right")
     # plt.show()
+    df[SMA] = var
+    print(df)
     print(var)
-    return df
 
 
 # time_list = [5,10,25,50]
