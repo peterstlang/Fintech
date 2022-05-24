@@ -60,12 +60,16 @@ def execute_scrape(ticker="AAPL"):
 
 
 # plot SMA
-def plot_SMA(df=None, time_period=10):
-    SMA = str("SMA" + "_" + str(time_period))
-    df[SMA] = df.Close.rolling(int(time_period)).mean()
-    df.plot(x="Date", y=["Close", SMA], figsize=(8, 8))
+def plot_SMA(df=None, time_period=[10]):
+    SMA_list = ["Close"]
+    for i in range(len(time_period)):
+        SMA = str("SMA" + "_" + str(time_period[i]))
+        df[SMA] = df.Close.rolling(int(time_period[i])).mean()
+        SMA_list.append(SMA)
+    
+    df.plot(x="Date", y=SMA_list, figsize=(8, 8))
+    
     plt.xticks(rotation=45, ha="right")
-
     plt.show()
 
 
@@ -79,4 +83,4 @@ if __name__ == "__main__":
     preppa_df = plotte_prep(df=df)
 
     # print(df)
-    plot_SMA(df=preppa_df, time_period=5)
+    plot_SMA(df=preppa_df, time_period=[5,10,25])
