@@ -46,11 +46,17 @@ def plot_SMA(df=None, time_period=[10]):
     plt.xticks(rotation=45, ha="right")
     plt.show()
 
+def EMA(df = None, col = "Close", alpha = 1):
+    df = plotte_prep(df=df)
+    MAlist = df[col].tolist()
+    return MAlist
 
 if __name__ == "__main__":
-    df = execute_scrape()
+    #df = execute_scrape()
 
-    preppa_df = plotte_prep(df=df)
+    #preppa_df = plotte_prep(df=df)
 
     # print(df)
-    plot_SMA(df=preppa_df, time_period=[5,10,25])
+    #plot_SMA(df=preppa_df, time_period=[5,10,25])
+    
+    fixedquestionmark = EMA(df=preppa_df)
