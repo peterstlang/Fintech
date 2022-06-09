@@ -10,6 +10,7 @@ import time
 from bs4 import BeautifulSoup
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 import yhf_scraper as yhf
 
@@ -39,6 +40,7 @@ def plot_SMA(df=None, time_period=[10]):
     for i in range(len(time_period)):
         SMA = str("SMA" + "_" + str(time_period[i]))
         df[SMA] = df.Close.rolling(int(time_period[i])).mean()
+        #df[SMA] = MY_OWN_SMA(df = df, Window = time_period[i])
         SMA_list.append(SMA)
     
     df.plot(x="Date", y=SMA_list, figsize=(8, 8))
@@ -46,17 +48,31 @@ def plot_SMA(df=None, time_period=[10]):
     plt.xticks(rotation=45, ha="right")
     plt.show()
 
-def EMA(df = None, col = "Close", alpha = 1):
+def MY_OWN_SMA(df = None, col = "Close", Window = 3):
     df = plotte_prep(df=df)
     MAlist = df[col].tolist()
-    return MAlist
+    MAlist.reverse()
+    print(MAlist)
+    sma = [np.nan] * (Window - 1)
+    i = 0
+    while i < len(MAlist) - Window + 1:
+        avg = sum(MAlist[i:i+Window])/Window
+        sma.append(avg)
+        i += 1
+    return sma
 
 if __name__ == "__main__":
-    #df = execute_scrape()
+    df = execute_scrape()
 
-    #preppa_df = plotte_prep(df=df)
+    preppa_df = plotte_prep(df=df)
 
     # print(df)
-    #plot_SMA(df=preppa_df, time_period=[5,10,25])
+    plot_SMA(df=preppa_df, time_period=[5,10,25])
     
-    fixedquestionmark = EMA(df=preppa_df)
+    #fixedquestionmark = EMA(df=preppa_df)
+    #mySMA_5 = SMA(df=preppa_df, Window = 5)
+    #pandasSMA_5 = preppa_df["SMA_5"].to_list()
+    #for i, j in zip(mySMA_5, pandasSMA_5):
+    #    print(i, j)
+    
+    
