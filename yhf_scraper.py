@@ -117,4 +117,3 @@ if __name__ == "__main__":
     scraped = scrape_it(rows)
     df = dicts_to_df(scraped)
     print(df)
-

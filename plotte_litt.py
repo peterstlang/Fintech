@@ -104,17 +104,17 @@ if __name__ == "__main__":
     #preppa_df = plotte_prep(df=df)
 
     # print(df)
-    #plot_MA(df=preppa_df, col="Close", func=calc_SMA, time_period=[5,10,25])
-    #plot_CMA(df=preppa_df, col="Close")
+    plot_MA(df=preppa_df, col="Close", func=calc_SMA, time_period=[5,10,25])
+    plot_CMA(df=preppa_df, col="Close")
     
-    print(calc_EMA(df=preppa_df, col="Close"))
-    #print(calc_SMA(df=preppa_df, col="Close", Window = 5))
+    
     
     #fixedquestionmark = EMA(df=preppa_df)
     #mySMA_5 = SMA(df=preppa_df, Window = 5)
     #pandasSMA_5 = preppa_df["SMA_5"].to_list()
     #for i, j in zip(mySMA_5, pandasSMA_5):
     #    print(i, j)
+
     
     
     
