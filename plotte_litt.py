@@ -61,6 +61,21 @@ def calc_CMA(df = None, col = None, Window = None):
         i += 1
     return cumsum
 
+# calculate exponential moving average
+def calc_EMA(df = None, col = None, days = 10, smoothening = 2):
+    df = plotte_prep(df=df)
+    ColList = df[col].tolist()
+    ColList.reverse()
+    SMA = sum(ColList[:days])/days
+    EMA_lst = [np.nan]*(days - 1) + [SMA]
+    
+    for i in range(len(ColList[:days]), len(ColList)):
+        EMA = (ColList[i] * (smoothening/(1 + days))) + \
+        (EMA_lst[i-1] * (1 - (smoothening/(1 + days)))) 
+        EMA_lst.append(EMA)
+    
+    return EMA_lst
+        
 # plot for moving average
 def plot_MA(df=None, func=None, col=None, time_period=None):
     MA_list = [col]
@@ -89,13 +104,17 @@ if __name__ == "__main__":
     #preppa_df = plotte_prep(df=df)
 
     # print(df)
-    plot_MA(df=preppa_df, col="Close", func=calc_SMA, time_period=[5,10,25])
-    plot_CMA(df=preppa_df, col="Close")
+    #plot_MA(df=preppa_df, col="Close", func=calc_SMA, time_period=[5,10,25])
+    #plot_CMA(df=preppa_df, col="Close")
+    
+    print(calc_EMA(df=preppa_df, col="Close"))
+    #print(calc_SMA(df=preppa_df, col="Close", Window = 5))
     
     #fixedquestionmark = EMA(df=preppa_df)
     #mySMA_5 = SMA(df=preppa_df, Window = 5)
     #pandasSMA_5 = preppa_df["SMA_5"].to_list()
     #for i, j in zip(mySMA_5, pandasSMA_5):
     #    print(i, j)
+    
     
     
