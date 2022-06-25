@@ -81,10 +81,31 @@ def calc_EMA(df = None, col = None, days = 10, smoothening = 2):
         EMA_lst.append(EMA)
     
     return EMA_lst
+
+# calculate weighted moving average
+def calc_WMA(df = None, col = None, Window = None):
+    df = plotte_prep(df=df)
+    ColList = df[col].tolist()
+    ColList.reverse()
+    
+    WMA_list = [np.nan] * (Window - 1)
+    numerator = [x for x in range(1, Window + 1)]
+    denominator = sum(numerator)
+    
+    i = 0
+    while i < len(ColList) - Window + 1:
+        WMA = 0
+        for j in range(len(numerator)):
+            WMA += ColList[i + j] * numerator[j] / denominator
+        WMA_list.append(WMA)
+        
+        i += 1
+        
+    return WMA_list
   
 #%%
       
-# plot for moving average
+# plot for simple moving average
 def plot_SMA(df=None, col=None, time_period=None):
     SMA_list = [col]
     for i in range(len(time_period)):
@@ -105,7 +126,8 @@ def plot_CMA(df=None, col=None):
     
     plt.xticks(rotation=45, ha="right")
     plt.show()
-    
+
+# plot for exponential moving average  
 def plot_EMA(df=None, col=None, days = [10], smoothening = 2):
     EMA_list = [col]
     for i in range(len(days)):
