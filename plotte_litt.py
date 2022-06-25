@@ -140,18 +140,35 @@ def plot_EMA(df=None, col=None, days = [10], smoothening = 2):
     plt.xticks(rotation=45, ha="right")
     plt.show()
     
+def plot_WMA(df=None, col=None, time_period=None):
+    WMA_list = [col]
+    for i in range(len(time_period)):
+        WMA = str("WMA" + "_" + str(time_period[i]))
+        df[WMA] = calc_WMA(df=df, col=col, Window=time_period[i])
+        WMA_list.append(WMA)
+        
+    df.plot(x="Date", y=WMA_list, figsize=(8, 8))
+    
+    plt.xticks(rotation=45, ha="right")
+    plt.show()
+    
+    
     
 #%%
 
 if __name__ == "__main__":
-    df = execute_scrape()
+    #df = execute_scrape()
 
-    preppa_df = plotte_prep(df=df)
+    #preppa_df = plotte_prep(df=df)
 
     # print(df)
-    plot_MA(df=preppa_df, col="Close", time_period=[5,10,25])
+    plot_SMA(df=preppa_df, col="Close", time_period=[5,10,25])
     plot_CMA(df=preppa_df, col="Close")
     plot_EMA(df=preppa_df, col="Close", days=[12, 26])
+    plot_WMA(df=preppa_df, col="Close", time_period=[5,10,25])
+    
+    
+    
     
     
     
