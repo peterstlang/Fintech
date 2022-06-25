@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # print(df)
     plot_MA(df=preppa_df, col="Close", time_period=[5,10,25])
     plot_CMA(df=preppa_df, col="Close")
-    plot_EMA(df=preppa_df, col="Close", days=[10, 50])
+    plot_EMA(df=preppa_df, col="Close", days=[12, 26])
     
     
     
