@@ -5,6 +5,8 @@ Created on Sun Jan 16 21:45:37 2022
 @author: peter
 """
 
+#%%
+
 from selenium import webdriver
 import time
 from bs4 import BeautifulSoup
@@ -13,6 +15,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import yhf_scraper as yhf
+
+#%%
 
 def plotte_prep(df=None):
     cols = list(df.columns)
@@ -32,6 +36,8 @@ def execute_scrape(ticker="AAPL"):
     scraped = yhf.scrape_it(rows)
     df = yhf.dicts_to_df(scraped)
     return df
+
+#%%
 
 #calculate simple moving average
 def calc_SMA(df = None, col = None, Window = None):
@@ -75,17 +81,19 @@ def calc_EMA(df = None, col = None, days = 10, smoothening = 2):
         EMA_lst.append(EMA)
     
     return EMA_lst
-        
+  
+#%%
+      
 # plot for moving average
-def plot_MA(df=None, func=None, col=None, time_period=None):
-    MA_list = [col]
+def plot_SMA(df=None, col=None, time_period=None):
+    SMA_list = [col]
     for i in range(len(time_period)):
         SMA = str("SMA" + "_" + str(time_period[i]))
         #df[SMA] = df.Close.rolling(int(time_period[i])).mean()
-        df[SMA] = func(df = df, col=col, Window = time_period[i])
-        MA_list.append(SMA)
+        df[SMA] = calc_SMA(df = df, col=col, Window = time_period[i])
+        SMA_list.append(SMA)
     
-    df.plot(x="Date", y=MA_list, figsize=(8, 8))
+    df.plot(x="Date", y=SMA_list, figsize=(8, 8))
     
     plt.xticks(rotation=45, ha="right")
     plt.show()
@@ -97,15 +105,31 @@ def plot_CMA(df=None, col=None):
     
     plt.xticks(rotation=45, ha="right")
     plt.show()
+    
+def plot_EMA(df=None, col=None, days = [10], smoothening = 2):
+    EMA_list = [col]
+    for i in range(len(days)):
+        EMA = str(str(days[i]) + "_day_EMA")
+        df[EMA] = calc_EMA(df=df, col=col, days=days[i], smoothening=smoothening)
+        EMA_list.append(EMA)
+        
+    df.plot(x="Date", y=EMA_list, figsize=(8, 8))
+    
+    plt.xticks(rotation=45, ha="right")
+    plt.show()
+    
+    
+#%%
 
 if __name__ == "__main__":
-    #df = execute_scrape()
+    df = execute_scrape()
 
-    #preppa_df = plotte_prep(df=df)
+    preppa_df = plotte_prep(df=df)
 
     # print(df)
-    plot_MA(df=preppa_df, col="Close", func=calc_SMA, time_period=[5,10,25])
+    plot_MA(df=preppa_df, col="Close", time_period=[5,10,25])
     plot_CMA(df=preppa_df, col="Close")
+    plot_EMA(df=preppa_df, col="Close", days=[10, 50])
     
     
     
