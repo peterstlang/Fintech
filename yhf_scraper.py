@@ -21,8 +21,12 @@ def get_stock(symbol):
 
 def gimme_soup_w_start_end(url, start="01-01-2018", end="01-01-2020"):
     from selenium.webdriver.common.keys import Keys
+    
+    chrome_options = webdriver.ChromeOptions(); 
+    chrome_options.add_experimental_option("excludeSwitches", ['enable-automation']);
 
-    driver = webdriver.Chrome(executable_path="C:\\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path="C:\\chromedriver.exe", 
+                              options=chrome_options)
     driver.maximize_window()
     driver.implicitly_wait(1)
     driver.get(url)

@@ -29,9 +29,9 @@ def plotte_prep(df=None):
     return df
 
 
-def execute_scrape(ticker="AAPL"):
+def execute_scrape(ticker="AAPL", start="01-06-2021", end="01-01-2022"):
     url = yhf.get_stock(ticker)
-    soup_w = yhf.gimme_soup_w_start_end(url, start="01-06-2021", end="01-01-2022")
+    soup_w = yhf.gimme_soup_w_start_end(url, start=start, end=end)
     rows = yhf.soup_to_scrape(soup_w)
     scraped = yhf.scrape_it(rows)
     df = yhf.dicts_to_df(scraped)
