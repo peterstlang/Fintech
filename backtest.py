@@ -19,9 +19,9 @@ if __name__ == "__main__":
     df = plitt.execute_scrape(start="01-01-2018", end="01-01-2022")
     df = plitt.plotte_prep(df)
     
-    plitt.plot_CMA(df=df, col="Close")
+    #plitt.plot_CMA(df=df, col="Close")
     
-    plitt.plot_SMA(df=df, col="Close", time_period=[50,200])
+    #plitt.plot_SMA(df=df, col="Close", time_period=[50,200])
     
     df["SMA_50"] = plitt.calc_SMA(df, "Close", 50)
     df["SMA_200"] = plitt.calc_SMA(df, "Close", 200)
@@ -31,8 +31,7 @@ if __name__ == "__main__":
     
     df.dropna(inplace=True)
     
-    crossover = df["SMA_50"] > df["SMA_200"]
-    #crossover = crossover.diff()
+    crossover = (df["SMA_50"] > df["SMA_200"]) & (df["SMA_50"] > df["SMA_200"]).diff()
     
     df["Cross"] = crossover
     
