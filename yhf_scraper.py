@@ -119,5 +119,4 @@ if __name__ == "__main__":
     soup = gimme_soup_w_start_end(url)
     rows = soup_to_scrape(soup)
     scraped = scrape_it(rows)
-    df = dicts_to_df(scraped)
-    print(df)
+    df_unflipped = dicts_to_df(scraped)

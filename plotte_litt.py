@@ -19,14 +19,15 @@ import yhf_scraper as yhf
 #%%
 
 def plotte_prep(df=None):
-    cols = list(df.columns)
+    copied = df.copy()
+    cols = list(copied.columns)
     cols = cols[1:7]
 
-    df = df[::-1]
+    copied.iloc[:] = copied.iloc[::-1].values
 
     for i in cols:
-        df[i] = pd.to_numeric(df[i])
-    return df
+        copied[i] = pd.to_numeric(copied[i])
+    return copied
 
 
 def execute_scrape(ticker="AAPL", start="01-06-2021", end="01-01-2022"):
@@ -41,9 +42,7 @@ def execute_scrape(ticker="AAPL", start="01-06-2021", end="01-01-2022"):
 
 #calculate simple moving average
 def calc_SMA(df = None, col = None, Window = None):
-    df = plotte_prep(df=df)
     ColList = df[col].tolist()
-    ColList.reverse()
     sma = [np.nan] * (Window - 1)
     i = 0
     while i < len(ColList) - Window + 1:
@@ -54,9 +53,7 @@ def calc_SMA(df = None, col = None, Window = None):
 
 # calculate cumulative moving average
 def calc_CMA(df = None, col = None, Window = None):
-    df = plotte_prep(df=df)
     ColList = df[col].tolist()
-    ColList.reverse()
     cumsum = []
     
     i = 1
@@ -69,9 +66,7 @@ def calc_CMA(df = None, col = None, Window = None):
 
 # calculate exponential moving average
 def calc_EMA(df = None, col = None, days = 10, smoothening = 2):
-    df = plotte_prep(df=df)
     ColList = df[col].tolist()
-    ColList.reverse()
     SMA = sum(ColList[:days])/days
     EMA_lst = [np.nan]*(days - 1) + [SMA]
     
@@ -84,9 +79,7 @@ def calc_EMA(df = None, col = None, days = 10, smoothening = 2):
 
 # calculate weighted moving average
 def calc_WMA(df = None, col = None, Window = None):
-    df = plotte_prep(df=df)
     ColList = df[col].tolist()
-    ColList.reverse()
     
     WMA_list = [np.nan] * (Window - 1)
     numerator = [x for x in range(1, Window + 1)]
@@ -157,6 +150,7 @@ def plot_WMA(df=None, col=None, time_period=None):
 #%%
 
 if __name__ == "__main__":
+    pass
     #df = execute_scrape()
 
     #preppa_df = plotte_prep(df=df)
