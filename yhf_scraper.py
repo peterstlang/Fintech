@@ -32,7 +32,7 @@ def gimme_soup_w_start_end(url, start="01-01-2018", end="01-01-2020"):
     driver.get(url)
     driver.find_element_by_xpath('//*[@value="agree"]').click()
 
-    time.sleep(1)
+    time.sleep(3)
     drp = driver.find_element_by_xpath(
         '//div[@class="Pos(r) D(ib) C($linkColor) Cur(p)"]/*[name()="svg"][@data-icon="CoreArrowDown"]'
     )
