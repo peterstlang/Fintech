@@ -126,17 +126,18 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
 
     outcome_dict = {}
     
-    for t in range(len(ticker_list)):
-        df = yf.download(tickers=ticker_list[t], start=start, end=end, interval=interval)
+    for i in range(len(ticker_list)):
+        df = yf.download(tickers=ticker_list[i], start=start, end=end, interval=interval)
         df = crossover_strategy(df=df, fast=fast, slow=slow)
-        #selldates, outcome = backtest(df=df)
-        #df = sellsignal_df(df, selldates, outcome)
-        #winrate = df.Outcome.value_counts()[0] / df.Outcome.value_counts().sum()
+        selldates, outcome = backtest(df=df)
+        df = sellsignal_df(df, selldates, outcome)
+        winrate = df.Outcome.value_counts()[0] / df.Outcome.value_counts().sum()
         
-        #outcome_dict[ticker_list[i]] = outcome, winrate
+        outcome_dict[ticker_list[i]] = outcome, winrate
         
-        #return outcome_dict
-        return df
+        
+    return outcome_dict
+        #return df
         
         
 
@@ -149,10 +150,12 @@ if __name__ == "__main__":
     
     import yfinance as yf
     
-    df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
-    df = crossover_strategy(df=df, fast=50, slow=200)
-    selldates, outcome = backtest(df)
-    df = sellsignal_df(df, selldates, outcome)
+# =============================================================================
+#     df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
+#     df = crossover_strategy(df=df, fast=50, slow=200)
+#     selldates, outcome = backtest(df)
+#     df = sellsignal_df(df, selldates, outcome)
+# =============================================================================
     
 
 # =============================================================================
@@ -176,10 +179,10 @@ if __name__ == "__main__":
 #         print(v)
 # =============================================================================
 
-    #ticker_list = ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'GOOG', 'GOOGL',
-    #               'META']
+    ticker_list = ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'GOOG', 'GOOGL',
+                   'META']
     
-    #dict_ = full_backtest(ticker_list=['AAPL'], start='2022-01-01', interval='1h')
+    dict_ = full_backtest(ticker_list=ticker_list, start='2021-01-01', interval='1h')
 
 
     
