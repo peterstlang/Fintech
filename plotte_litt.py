@@ -151,9 +151,9 @@ def plot_WMA(df=None, col=None, time_period=None):
 
 if __name__ == "__main__":
     pass
-    #df = execute_scrape()
+    df = execute_scrape()
 
-    #preppa_df = plotte_prep(df=df)
+    preppa_df = plotte_prep(df=df)
 
     # print(df)
     plot_SMA(df=preppa_df, col="Close", time_period=[5,10,25])
