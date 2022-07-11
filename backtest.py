@@ -12,6 +12,8 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import ta
+from sqlalchemy import create_engine
+from datetime import date, timedelta
 
 #%% creating function for sellsignals
 
@@ -127,6 +129,9 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
     outcome_dict = {}
     
     for i in range(len(ticker_list)):
+        #---
+        #Maybe change to take df instead of ticker
+        #---
         df = yf.download(tickers=ticker_list[i], start=start, end=end, interval=interval)
         df = crossover_strategy(df=df, fast=fast, slow=slow)
         selldates, outcome = backtest(df=df)
@@ -140,7 +145,14 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
         #return df
         
         
+#%%
 
+def get_data(symbol, start=None, end=None, interval='1h'):
+    df = yf.download(tickers=symbol, start=start, end=end, interval=interval)
+    #df.index = pd.to_datetime(df.index, unit='ms')
+    df.index = df.index.tz_localize(None)
+    df = df.astype(float)
+    return df
 
 
 #%% hovedprogram
@@ -179,10 +191,25 @@ if __name__ == "__main__":
 #         print(v)
 # =============================================================================
 
+# =============================================================================
+# 
     ticker_list = ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'GOOG', 'GOOGL',
-                   'META']
+                     'META']
+#     
+#     dict_ = full_backtest(ticker_list=ticker_list, start='2021-01-01', interval='1h')
+# 
+# =============================================================================
+
+    engine = create_engine('sqlite:///Stocks.db')
+    today = date.today()
+    day_1 = today.strftime("%Y-%m-%d")
+    daysago = today - timedelta(days = 30)
+    data = get_data('AAPL', start='2022-07-01')
     
-    dict_ = full_backtest(ticker_list=ticker_list, start='2021-01-01', interval='1h')
+    for symbol in ticker_list:
+        df = get_data(symbol, start=daysago)
+        df.to_sql(symbol, engine)
+        
 
 
     
