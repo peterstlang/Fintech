@@ -149,9 +149,11 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
 
 def get_data(symbol, start=None, end=None, interval='1h'):
     df = yf.download(tickers=symbol, start=start, end=end, interval=interval)
-    #df.index = pd.to_datetime(df.index, unit='ms')
+    df.index = pd.to_datetime(df.index, unit='ms')
     df.index = df.index.tz_localize(None)
+    df.index.names = ['Date']
     df = df.astype(float)
+    df = df.reset_index()
     return df
 
 
@@ -163,7 +165,7 @@ if __name__ == "__main__":
     import yfinance as yf
     
 # =============================================================================
-#     df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
+#    df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
 #     df = crossover_strategy(df=df, fast=50, slow=200)
 #     selldates, outcome = backtest(df)
 #     df = sellsignal_df(df, selldates, outcome)
@@ -205,10 +207,20 @@ if __name__ == "__main__":
     day_1 = today.strftime("%Y-%m-%d")
     daysago = today - timedelta(days = 30)
     data = get_data('AAPL', start='2022-07-01')
+    data.index.names = ['Date']
+    
+    df = get_data('AAPL', start=daysago)
+    df = df.reset_index()
     
     for symbol in ticker_list:
         df = get_data(symbol, start=daysago)
-        df.to_sql(symbol, engine)
+        df.to_sql(symbol, engine, index=False)
+        
+    imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='index'""", engine)
+    
+    df_from_sql = pd.read_sql_table('AAPL', engine)
+
+
         
 
 
