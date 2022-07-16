@@ -12,7 +12,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import ta
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 from datetime import date, timedelta
 
 #%% creating function for sellsignals
@@ -156,13 +156,33 @@ def get_data(symbol, start=None, end=None, interval='1h'):
     df = df.reset_index()
     return df
 
+#%%
+
+# func for connectiong to db
+
+def db_connection(db):
+    from sqlalchemy import create_engine
+    url = 'sqlite:///' + str(db)
+    engine = create_engine(url)
+    conn = engine.connect()
+    return engine, conn
+
+
 
 #%% hovedprogram
 
 if __name__ == "__main__":
     #lettere å bruke yf enn min egen hehe
+    engine, conn = db_connection("STONKS.db")
     
-    import yfinance as yf
+    result = conn.execute("SELECT * FROM AAPL")
+    for row in result:
+        print(row)
+    result.close()
+    
+    
+    
+    
     
 # =============================================================================
 #    df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
@@ -195,31 +215,31 @@ if __name__ == "__main__":
 
 # =============================================================================
 # 
-    ticker_list = ['AAPL', 'MSFT', 'AMZN', 'TSLA', 'GOOG', 'GOOGL',
-                     'META']
 #     
 #     dict_ = full_backtest(ticker_list=ticker_list, start='2021-01-01', interval='1h')
 # 
 # =============================================================================
 
-    engine = create_engine('sqlite:///Stocks.db')
-    today = date.today()
-    day_1 = today.strftime("%Y-%m-%d")
-    daysago = today - timedelta(days = 30)
-    data = get_data('AAPL', start='2022-07-01')
-    data.index.names = ['Date']
-    
-    df = get_data('AAPL', start=daysago)
-    df = df.reset_index()
-    
-    for symbol in ticker_list:
-        df = get_data(symbol, start=daysago)
-        df.to_sql(symbol, engine, index=False)
-        
-    imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='table'""", engine)
-    
-    df_from_sql = pd.read_sql_table('AMZN', engine)
-
+# =============================================================================
+#     engine = create_engine('sqlite:///Stocks.db')
+#     today = date.today()
+#     day_1 = today.strftime("%Y-%m-%d")
+#     daysago = today - timedelta(days = 30)
+#     data = get_data('AAPL', start='2022-07-01')
+#     data.index.names = ['Date']
+#     
+#     df = get_data('AAPL', start=daysago)
+#     df = df.reset_index()
+#     
+#     for symbol in ticker_list:
+#         df = get_data(symbol, start=daysago)
+#         df.to_sql(symbol, engine, index=False)
+#         
+#     imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='table'""", engine)
+#     
+#     df_from_sql = pd.read_sql_table('AMZN', engine)
+# 
+# =============================================================================
 
         
 
