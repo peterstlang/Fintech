@@ -218,7 +218,7 @@ if __name__ == "__main__":
         
     imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='index'""", engine)
     
-    df_from_sql = pd.read_sql_table('AAPL', engine)
+    df_from_sql = pd.read_sql_table('AMZN', engine)
 
 
         
