@@ -216,7 +216,7 @@ if __name__ == "__main__":
         df = get_data(symbol, start=daysago)
         df.to_sql(symbol, engine, index=False)
         
-    imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='index'""", engine)
+    imp = pd.read_sql("""SELECT name FROM sqlite_schema WHERE type='table'""", engine)
     
     df_from_sql = pd.read_sql_table('AMZN', engine)
 
