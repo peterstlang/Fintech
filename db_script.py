@@ -12,7 +12,6 @@ Created on Sun Jul 17 01:05:18 2022
 
 
 def get_ticker_list():
-    # ripper kode for å få ticker liste
     import pandas as pd
     payload=pd.read_html('https://en.wikipedia.org/wiki/Nasdaq-100')
     df = payload[3]
