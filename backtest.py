@@ -7,7 +7,7 @@ Created on Sat Jun 25 21:46:02 2022
 
 #%% imports
 
-import plotte_litt as plitt
+import glidende_gjsnitt_m_plott as glgj
 import yfinance as yf 
 import pandas as pd
 import numpy as np
@@ -87,15 +87,15 @@ def sellsignal_df(df, selldates, outcome):
 
 
 # =============================================================================
-#     df = plitt.execute_scrape(ticker="KO", start="01-01-2015", end="01-01-2022")
-#     df = plitt.plotte_prep(df)
+#     df = glgj.execute_scrape(ticker="KO", start="01-01-2015", end="01-01-2022")
+#     df = glgj.plotte_prep(df)
 #     
-#     #plitt.plot_CMA(df=df, col="Close")
+#     #glgj.plot_CMA(df=df, col="Close")
 #     
-#     #plitt.plot_SMA(df=df, col="Close", time_period=[50,200])
+#     #glgj.plot_SMA(df=df, col="Close", time_period=[50,200])
 #     
-#     df["SMA_50"] = plitt.calc_SMA(df, "Close", 50)
-#     df["SMA_200"] = plitt.calc_SMA(df, "Close", 200)
+#     df["SMA_50"] = glgj.calc_SMA(df, "Close", 50)
+#     df["SMA_200"] = glgj.calc_SMA(df, "Close", 200)
 #     df['ATR'] = ta.volatility.average_true_range(df.High, df.Low, df.Close)
 #     df["TP"] = df.Close + (df.ATR * 2)
 #     df["SL"] = df.Close - (df.ATR * 3)

@@ -30,33 +30,33 @@ def gimme_soup_w_start_end(url, start="01-01-2018", end="01-01-2020"):
     driver.maximize_window()
     driver.implicitly_wait(1)
     driver.get(url)
-    driver.find_element_by_xpath('//*[@value="agree"]').click()
+    driver.find_element("xpath", '//*[@value="agree"]').click()
 
     time.sleep(3)
-    drp = driver.find_element_by_xpath(
+    drp = driver.find_element("xpath",
         '//div[@class="Pos(r) D(ib) C($linkColor) Cur(p)"]/*[name()="svg"][@data-icon="CoreArrowDown"]'
     )
     drp.click()
     time.sleep(1)
 
-    name_start = driver.find_element_by_name("startDate")
+    name_start = driver.find_element("name", "startDate")
     name_start.clear()
     name_start.send_keys(start)
 
-    name_end = driver.find_element_by_name("endDate")
+    name_end = driver.find_element("name", "endDate")
     name_end.clear()
     name_end.send_keys(end)
 
     time.sleep(0.5)
-    driver.find_element_by_xpath('//span[contains(text(), "Done")]').click()
+    driver.find_element("xpath", '//span[contains(text(), "Done")]').click()
     time.sleep(0.5)
-    driver.find_element_by_xpath('//span[contains(text(), "Apply")]').click()
+    driver.find_element('xpath', '//span[contains(text(), "Apply")]').click()
     time.sleep(1)
 
     last_height = driver.execute_script("return document.documentElement.scrollHeight")
 
     while True:
-        driver.find_element_by_xpath("//body").send_keys(Keys.CONTROL + Keys.END)
+        driver.find_element('xpath',"//body").send_keys(Keys.CONTROL + Keys.END)
         time.sleep(0.5)
         new_height = driver.execute_script(
             "return document.documentElement.scrollHeight"
@@ -67,7 +67,7 @@ def gimme_soup_w_start_end(url, start="01-01-2018", end="01-01-2020"):
         last_height = new_height
 
     html = driver.page_source
-    soup = BeautifulSoup(html, "html5lib")
+    soup = BeautifulSoup(html, "lxml")
 
     return soup
 
