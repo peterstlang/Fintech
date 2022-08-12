@@ -180,6 +180,8 @@ if __name__ == "__main__":
         print(row)
     result.close()
     
+    od = full_backtest(ticker_list=["AAPL", "GOOG", "KO"], start="2022-01-01", interval="1h")
+    
     
     
     
