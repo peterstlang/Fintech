@@ -14,7 +14,8 @@ Created on Sun Jul 17 01:05:18 2022
 def get_ticker_list():
     import pandas as pd
     payload=pd.read_html('https://en.wikipedia.org/wiki/Nasdaq-100')
-    df = payload[3]
+    df = payload[4]
+
     Tickers = df.Ticker.to_list()
     return Tickers
     

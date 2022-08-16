@@ -167,20 +167,25 @@ def db_connection(db):
     conn = engine.connect()
     return engine, conn
 
+#%% 
+
+def db_to_df(ticker=None, db="STONKS.db"):
+    engine, conn = db_connection("STONKS.db")
+    try:
+      df = pd.read_sql(ticker, conn)
+      return df
+    except:
+      print("Ticker not in database")
+    
+
 
 
 #%% hovedprogram
 
 if __name__ == "__main__":
-    #lettere å bruke yf enn min egen hehe
-    engine, conn = db_connection("STONKS.db")
+    KO_df = db_to_df("KO")
     
-    result = conn.execute("SELECT * FROM AAPL")
-    for row in result:
-        print(row)
-    result.close()
-    
-    od = full_backtest(ticker_list=["AAPL", "GOOG", "KO"], start="2022-01-01", interval="1h")
+    #od = full_backtest(ticker_list=["AAPL", "GOOG", "KO"], start="2022-01-01", interval="1h")
     
     
     
