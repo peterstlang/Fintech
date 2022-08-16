@@ -154,14 +154,19 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
         except:
             wins = 0
             
+            
         total = df.Outcome.value_counts().sum()
         
         winrate = wins / total
         
         #if winrate == nan:
         #    winrate = 0
+        outcome_list = df["Outcome"].to_list()
+        outcome_list = [str(x) for x in outcome_list]
+        outcome_list = [x for x in outcome_list if x != "nan"]
+
         
-        outcome_dict[ticker_list[i]] = outcome, winrate
+        outcome_dict[ticker_list[i]] = outcome_list, winrate
         
         
     return outcome_dict
@@ -183,11 +188,19 @@ def full_backtest_SQL(ticker_list=None,
         selldates, outcome = backtest(df=df)
         df = sellsignal_df(df, selldates, outcome)
         
-        wins = df.Outcome.value_counts()[0]
+        try:
+            wins = df.Outcome.value_counts()["TP"]
+        except:
+            wins = 0
+            
         total = df.Outcome.value_counts().sum()
         winrate = wins / total
         
-        outcome_dict[ticker_list[i]] = outcome, winrate
+        outcome_list = df["Outcome"].to_list()
+        outcome_list = [str(x) for x in outcome_list]
+        outcome_list = [x for x in outcome_list if x != "nan"]
+        
+        outcome_dict[ticker_list[i]] = outcome_list, winrate
         
     return outcome_dict
         
@@ -240,7 +253,8 @@ if __name__ == "__main__":
     #AAPL_df = pd.read_sql("AAPL", conn)
 
     
-    od = full_backtest(ticker_list=ticker_list, start="2022-01-01", interval="1h")
+    od = full_backtest_SQL()
+    #od = full_backtest(ticker_list=ticker_list, start='2021-01-01', interval='1h')
     
 
 

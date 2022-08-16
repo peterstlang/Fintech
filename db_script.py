@@ -28,12 +28,12 @@ def main():
     
     engine = create_engine('sqlite:///STONKS.db')
     today = date.today()
-    daysago = today - timedelta(days = 180)
+    daysago = today - timedelta(days = 729)
     
     ticker_list = get_ticker_list()
     
     for symbol in ticker_list:
-        df = get_data(symbol, start=daysago)
+        df = get_data(symbol, start=daysago, interval='1h')
         df.to_sql(symbol, engine, index=False)
     
     
