@@ -14,6 +14,7 @@ import numpy as np
 import ta
 #from sqlalchemy import create_engine
 from datetime import date, timedelta
+from db_script import get_ticker_list
 
 #%% creating function for sellsignals
 
@@ -55,13 +56,22 @@ def backtest(df):
                 looping_high = df.High.iloc[i + k]
                 looping_low = df.Low.iloc[i + k]
                 if looping_high >= TP:
+                    if df.iloc[i + k].name in selldates:
+                        in_position = False
+                        continue
+                    
                     selldates.append(df.iloc[i + k].name)
                     outcome.append('TP')
                     in_position = False
                 elif looping_low <= SL:
-                    selldates.append(df.iloc[i + k].name)
-                    outcome.append('SL')
+                    if df.iloc[i + k].name in selldates:
+                        in_position = False
+                        continue
+                        
+                    selldates.append(df.iloc[i + k].name) 
+                    outcome.append('SL') 
                     in_position = False
+
                 k += 1
 
     return selldates, outcome
@@ -123,6 +133,8 @@ def sellsignal_df(df, selldates, outcome):
 # 
 # =============================================================================
 #%%
+# does a full backtest (no money loss/gains calculated yet)
+
 def full_backtest(ticker_list=None, start=None, end=None, interval=None, 
                   fast=50, slow=200):
 
@@ -136,16 +148,52 @@ def full_backtest(ticker_list=None, start=None, end=None, interval=None,
         df = crossover_strategy(df=df, fast=fast, slow=slow)
         selldates, outcome = backtest(df=df)
         df = sellsignal_df(df, selldates, outcome)
-        winrate = df.Outcome.value_counts()[0] / df.Outcome.value_counts().sum()
+
+        try:
+            wins = df.Outcome.value_counts()["TP"]
+        except:
+            wins = 0
+            
+        total = df.Outcome.value_counts().sum()
+        
+        winrate = wins / total
+        
+        #if winrate == nan:
+        #    winrate = 0
         
         outcome_dict[ticker_list[i]] = outcome, winrate
         
         
     return outcome_dict
-        #return df
+
+        
+#%%
+
+def full_backtest_SQL(ticker_list=None, 
+                      fast=50, slow=200):
+    
+    outcome_dict = {}
+    
+    if ticker_list == None:
+        ticker_list = get_ticker_list()
+    
+    for i in range(len(ticker_list)):
+        df = db_to_df(ticker_list[i])
+        df = crossover_strategy(df=df, fast=fast, slow=slow)
+        selldates, outcome = backtest(df=df)
+        df = sellsignal_df(df, selldates, outcome)
+        
+        wins = df.Outcome.value_counts()[0]
+        total = df.Outcome.value_counts().sum()
+        winrate = wins / total
+        
+        outcome_dict[ticker_list[i]] = outcome, winrate
+        
+    return outcome_dict
         
         
 #%%
+# gets data
 
 def get_data(symbol, start=None, end=None, interval='1h'):
     df = yf.download(tickers=symbol, start=start, end=end, interval=interval)
@@ -168,6 +216,7 @@ def db_connection(db):
     return engine, conn
 
 #%% 
+# converting data to df again
 
 def db_to_df(ticker=None, db="STONKS.db"):
     engine, conn = db_connection("STONKS.db")
@@ -183,20 +232,33 @@ def db_to_df(ticker=None, db="STONKS.db"):
 #%% hovedprogram
 
 if __name__ == "__main__":
-    KO_df = db_to_df("KO")
-    
-    #od = full_backtest(ticker_list=["AAPL", "GOOG", "KO"], start="2022-01-01", interval="1h")
+    #strategy = full_backtest_SQL()
     
     
+    ticker_list = get_ticker_list()
+    #engine, conn = db_connection(db="STONKS.db")
+    #AAPL_df = pd.read_sql("AAPL", conn)
+
+    
+    od = full_backtest(ticker_list=ticker_list, start="2022-01-01", interval="1h")
+    
+
+
     
     
     
-# =============================================================================
-#    df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
+    
+# # =============================================================================
+#     df = yf.download(tickers='AAPL', start='2021-01-01', interval='1h')
 #     df = crossover_strategy(df=df, fast=50, slow=200)
 #     selldates, outcome = backtest(df)
 #     df = sellsignal_df(df, selldates, outcome)
-# =============================================================================
+#     win = df.Outcome.value_counts()[0]
+#     tot = df.Outcome.value_counts().sum()
+#     print(type(win), type(tot))
+#     wr = win / tot
+#     print(wr)
+# # =============================================================================
     
 
 # =============================================================================
